@@ -15,4 +15,51 @@ module.exports = {
             }
             );
     },
+    update(req, res) {
+        return IT_Assets
+          .findOne({
+              where: {
+                id: req.params.asset_id,
+                asset_type_code: req.params.asset_type_code,
+              },
+            })
+          .then(IT_Assets => {
+            if (!IT_Assets) {
+              return res.status(404).send({
+                message: 'IT_Assets Not Found',
+              });
+            }
+      
+            return IT_Assets
+              .update({
+                description: req.body.description||IT_Assets.description,
+                other_details: req.body.other_details||IT_Assets.other_details,
+              })
+              .then(updatedTodoItem => res.status(200).send(updatedTodoItem))
+              .catch(error => res.status(400).send(error));
+          })
+          .catch(error => res.status(400).send(error));
+      },
+      destroy(req, res) {
+        return IT_Assets
+          .findOne({
+              where: {
+                id: req.params.asset_id,
+                asset_type_code: req.params.asset_type_code,
+              },
+            })
+          .then(IT_Assets => {
+            if (!IT_Assets) {
+              return res.status(404).send({
+                message: 'IT_Assets Not Found',
+              });
+            }
+      
+            return IT_Assets
+              .destroy()
+              .then(() => res.status(204).send())
+              .catch(error => res.status(400).send(error));
+          })
+          .catch(error => res.status(400).send(error));
+      },
 };
